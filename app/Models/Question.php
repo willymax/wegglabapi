@@ -10,6 +10,7 @@ class Question extends Model
     use HasFactory;
 
     protected $fillable = ['body', 'title', 'user_id', 'slug'];
+    protected $with = ['answers', 'files'];
 
     /**
      * The attributes that should be cast.
@@ -25,5 +26,10 @@ class Question extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class, 'question_id');
+    }
+    // user has many files
+    public function files()
+    {
+        return $this->hasMany(QuestionFile::class);
     }
 }
