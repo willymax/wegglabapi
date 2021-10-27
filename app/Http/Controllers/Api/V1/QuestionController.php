@@ -22,7 +22,7 @@ class QuestionController extends Controller
     public function index(Request $request)
     {
         //
-        $paginator = Question::with('files')->paginate($request->perPage);
+        $paginator = Question::paginate($request->perPage);
         return $this->respondWithPagination($paginator, $paginator->items());
     }
 
@@ -65,6 +65,10 @@ class QuestionController extends Controller
                 //
                 array_push($err, (object) array('source' => 'title', 'detail' => $message));
             }
+            foreach ($errors->get('questionFiles') as $message) {
+                //
+                array_push($err, (object) array('source' => 'questionFiles', 'detail' => $message));
+            }
             foreach ($errors->get('body') as $message) {
                 //
                 array_push($err, (object) array('source' => 'body', 'detail' => $message));
@@ -85,7 +89,7 @@ class QuestionController extends Controller
         if ($request->hasfile('questionFiles')) {
             foreach ($request->file('questionFiles') as $file) {
                 $name = $question->id . '_' . md5(uniqid()) . '.' . $file->getClientOriginalExtension();
-                $path = Storage::putFileAs('public/questions/files', $file, $name);
+                $path = Storage::putFileAs('questions/files', $file, $name);
                 $questionFile = $question->files()->create([
                     'file_url' => $path,
                     'file_type' => $file->getClientOriginalExtension(),

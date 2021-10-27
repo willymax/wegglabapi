@@ -10,7 +10,7 @@ class Question extends Model
     use HasFactory;
 
     protected $fillable = ['body', 'title', 'user_id', 'slug'];
-    protected $with = ['answers', 'files'];
+    protected $with = ['user', 'answers', 'files'];
 
     /**
      * The attributes that should be cast.
@@ -21,6 +21,13 @@ class Question extends Model
         'active' => 'boolean',
         'featured' => 'boolean',
     ];
+    /**
+     * Each question has a user
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // user has many answers
     public function answers()
