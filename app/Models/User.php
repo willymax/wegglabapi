@@ -53,6 +53,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Answer::class, 'user_id');
     }
+    public function social()
+    {
+        return $this->hasMany(UserSocial::class, 'user_id', 'id');
+    }
+
+    public function hasSocialLinked($service)
+    {
+        return (bool) $this->social->where('service', $service)->count();
+    }
 
     public function can_post()
     {

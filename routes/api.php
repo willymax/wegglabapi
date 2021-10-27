@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\QuestionController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UpdateUserPassword;
+use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\UserController as ControllersUserController;
 use App\Mail\InvoicePaid;
 use Illuminate\Http\Request;
@@ -26,7 +27,14 @@ use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 Route::prefix('v1')->group(function () {
     Route::post('/auth/register', [AuthController::class, 'register']);
 
-    Route::middleware('guest')->post('/auth/login', [AuthController::class, 'login']);
+    Route::middleware(['guest', 'web'])->group(function () {
+        Route::prefix('auth')->group(function () {
+            Route::post('/login', [AuthController::class, 'login']);
+            Route::get('/login/{service}', [SocialLoginController::class, 'redirect']);
+            Route::get('/login/{service}/callback', [SocialLoginController::class, 'callback']);
+            Route::post('/social-login/google', [AuthController::class, 'googleSignIn']);
+        });
+    });
 
 
     Route::middleware('guest')->post('/sendTestMail', function () {

@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponser;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Google_Client;
+use Google_Service_Drive;
 
 class AuthController extends Controller
 {
@@ -30,6 +33,31 @@ class AuthController extends Controller
         return $this->success([
             'token' => $user->createToken('API Token')->plainTextToken
         ]);
+    }
+
+    public function googleSignIn(Request $request)
+    {
+        //
+        $request->validate([
+            'id_token' => 'required|string'
+        ]);
+        $CLIENT_ID = env('GOOGLE_CLIENT_ID');
+        try {
+            $client = new Google_Client(['client_id' => $CLIENT_ID]); // Specify the CLIENT_ID of the app that accesses the backend
+            $payload = $client->verifyIdToken($request->id_token);
+            if ($payload) {
+                $userid = $payload['sub'];
+                dd($userid);
+                // If request specified a G Suite domain:
+                //$domain = $payload['hd'];
+            } else {
+                // Invalid ID token
+                return $this->respondWithError("Invalid ID token");
+            }
+        } catch (Exception $ex) {
+            // Invalid ID token
+            return $this->respondWithError("An error occurred " . $ex->getMessage());
+        }
     }
 
     public function login(Request $request)
