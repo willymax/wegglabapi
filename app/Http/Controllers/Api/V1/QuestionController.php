@@ -109,9 +109,11 @@ class QuestionController extends Controller
     public function show($id)
     {
         //
-        $question = Question::find($id);
+        $question = Question::where(['slug' => $id])->first();
         return $this->responseWithItem($question);
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
