@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Question;
+use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -34,6 +35,7 @@ class QuestionFactory extends Factory
             'active' => $this->faker->boolean(50),
             'featured' => $this->faker->boolean(50),
             'user_id' => User::all()->random()->id,
+            'subject_id' => Subject::all()->random()->id,
         ];
     }
 }

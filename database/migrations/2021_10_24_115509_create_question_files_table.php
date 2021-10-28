@@ -17,7 +17,7 @@ class CreateQuestionFilesTable extends Migration
             $table->id();
             $table->unsignedInteger('question_id');
             $table->string('file_url');
-            $table->enum('file_type', ['IMAGE', 'DOC']);
+            $table->string('file_type');
             $table->timestamps();
         });
     }

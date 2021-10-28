@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AnswerController;
 use App\Http\Controllers\Api\V1\QuestionController;
+use App\Http\Controllers\Api\V1\SubjectController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UpdateUserPassword;
@@ -56,6 +57,7 @@ Route::prefix('v1')->group(function () {
                 }
             );
             Route::resource('questions', QuestionController::class);
+            Route::resource('subjects', SubjectController::class);
             Route::resource('users', UserController::class);
             //Route::get('/users', [App\Http\Controllers\UserController::class, 'index']);
         }

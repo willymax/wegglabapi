@@ -22,7 +22,7 @@ class QuestionController extends Controller
     public function index(Request $request)
     {
         //
-        $paginator = Question::paginate($request->perPage);
+        $paginator = Question::orderBy('id', 'desc')->paginate($request->perPage);
         return $this->respondWithPagination($paginator, $paginator->items());
     }
 
@@ -48,6 +48,7 @@ class QuestionController extends Controller
         //
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|unique:questions,title',
+            'subject_id' => 'required|exists:subjects,id',
             'body' => 'required|string',
             'questionFiles' => 'array',
             'questionFiles.*' => 'file|max:1000|mimes:doc,pdf,docx,zip,jpg,png'
@@ -64,6 +65,10 @@ class QuestionController extends Controller
             foreach ($errors->get('title') as $message) {
                 //
                 array_push($err, (object) array('source' => 'title', 'detail' => $message));
+            }
+            foreach ($errors->get('subject_id') as $message) {
+                //
+                array_push($err, (object) array('source' => 'subject_id', 'detail' => $message));
             }
             foreach ($errors->get('questionFiles') as $message) {
                 //
@@ -83,8 +88,10 @@ class QuestionController extends Controller
         $question = $user->questions()->create([
             'title' => $request->title,
             'body' => $request->body,
+            'subject_id' => $request->subject_id,
             'slug' => Str::slug($request->title)
         ]);
+
 
         if ($request->hasfile('questionFiles')) {
             foreach ($request->file('questionFiles') as $file) {
@@ -110,6 +117,9 @@ class QuestionController extends Controller
     {
         //
         $question = Question::where(['slug' => $id])->first();
+        if ($question == null) {
+            return response()->json(['message' => 'Article not found'], 404);
+        }
         return $this->responseWithItem($question);
     }
 

@@ -15,17 +15,13 @@ class CreateQuestionsTable extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            //user_id
-            //title
-            //body
-            //views
-            //image
-            //slug
-            //active
-            //featured
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('subject_id');
             $table->foreign('user_id')
                 ->references('id')->on('users')
+                ->onDelete('cascade');
+            $table->foreign('subject_id')
+                ->references('id')->on('subjects')
                 ->onDelete('cascade');
             $table->string('title')->unique();
             $table->text('body');
