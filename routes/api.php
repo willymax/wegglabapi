@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,10 @@ Route::prefix('v1')->group(function () {
             Route::get('/login/{service}/callback', [SocialLoginController::class, 'callback']);
             Route::post('/social-login/google', [AuthController::class, 'googleSignIn']);
         });
+    });
+
+    Route::get('files/download/', function (Request $request) {
+        return Storage::disk('public')->download($request->fileUrl);
     });
 
 

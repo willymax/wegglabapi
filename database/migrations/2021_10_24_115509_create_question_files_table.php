@@ -15,6 +15,7 @@ class CreateQuestionFilesTable extends Migration
     {
         Schema::create('question_files', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->default('');
             $table->unsignedInteger('question_id');
             $table->string('file_url');
             $table->string('file_type');

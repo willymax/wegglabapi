@@ -96,8 +96,9 @@ class QuestionController extends Controller
         if ($request->hasfile('questionFiles')) {
             foreach ($request->file('questionFiles') as $file) {
                 $name = $question->id . '_' . md5(uniqid()) . '.' . $file->getClientOriginalExtension();
-                $path = Storage::putFileAs('questions/files', $file, $name);
+                $path = Storage::disk('public')->putFileAs('questions/files', $file, $name);
                 $questionFile = $question->files()->create([
+                    'name' => $name,
                     'file_url' => $path,
                     'file_type' => $file->getClientOriginalExtension(),
                 ]);

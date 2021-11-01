@@ -9,5 +9,5 @@ class QuestionFile extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['file_url', 'file_type'];
+    protected $fillable = ['name', 'file_url', 'file_type'];
 }
