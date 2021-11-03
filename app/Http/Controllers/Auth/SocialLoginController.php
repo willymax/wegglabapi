@@ -7,8 +7,6 @@ use App\Models\UserSocial;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponser;
-use Laravel\Socialite\Two\InvalidStateException;
-use Tymon\JWTAuth\JWTAuth;
 
 class SocialLoginController extends Controller
 {
@@ -46,7 +44,8 @@ class SocialLoginController extends Controller
         if (!$user) {
             $newUser = true;
             $user = User::create([
-                'name' => $serviceUser->getName(),
+                'first_name' => $serviceUser->getName(),
+                'last_name' => $serviceUser->getName(),
                 'email' => $email,
                 'password' => ''
             ]);

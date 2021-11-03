@@ -18,16 +18,40 @@ class AuthController extends Controller
     use ApiResponser;
     public function register(Request $request)
     {
-        $attr = $request->validate([
-            'name' => 'required|string|max:255',
+        $validator = Validator::make($request->all(), [
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed'
         ]);
 
+        if ($validator->fails()) {
+            $err = array();
+            $errors = $validator->errors();
+            foreach ($errors->get('firstName') as $message) {
+                //
+                array_push($err, (object) array('source' => 'firstName', 'detail' => $message));
+            }
+            foreach ($errors->get('lastName') as $message) {
+                //
+                array_push($err, (object) array('source' => 'lastName', 'detail' => $message));
+            }
+            foreach ($errors->get('email') as $message) {
+                //
+                array_push($err, (object) array('source' => 'email', 'detail' => $message));
+            }
+            foreach ($errors->get('password') as $message) {
+                //
+                array_push($err, (object) array('source' => 'password', 'detail' => $message));
+            }
+            return $this->respondValidationError($err);
+        }
+
         $user = User::create([
-            'name' => $attr['name'],
-            'password' => bcrypt($attr['password']),
-            'email' => $attr['email']
+            'first_name' => $request->firstName,
+            'last_name' => $request->lastName,
+            'password' => bcrypt($request->password),
+            'email' => $request->email
         ]);
 
         return $this->success([
