@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Answer extends Model
 {
     use HasFactory;
-    protected $with = ['user'];
+    protected $with = ['user', 'files'];
     protected $fillable = ['body', 'user_id', 'question_id'];
 
     // question belongs to one question
