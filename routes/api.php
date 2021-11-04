@@ -61,6 +61,7 @@ Route::prefix('v1')->group(function () {
                     });
                 }
             );
+            Route::resource('answers', AnswerController::class);
             Route::resource('questions', QuestionController::class);
             Route::resource('subjects', SubjectController::class);
             Route::resource('users', UserController::class);

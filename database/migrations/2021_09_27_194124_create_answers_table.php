@@ -24,7 +24,7 @@ class CreateAnswersTable extends Migration
                 ->references('id')->on('users')
                 ->onDelete('cascade');
             $table->text('body');
-            $table->float('price');
+            $table->float('price')->default(5.0);
             $table->string('image')->nullable();
             $table->boolean('active')->default(1);
             $table->boolean('featured')->default(0);

@@ -9,6 +9,7 @@ class Answer extends Model
 {
     use HasFactory;
     protected $with = ['user'];
+    protected $fillable = ['body', 'user_id', 'question_id'];
 
     // question belongs to one question
     public function question()
@@ -19,5 +20,10 @@ class Answer extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    // user has many files
+    public function files()
+    {
+        return $this->hasMany(AnswerFile::class);
     }
 }
