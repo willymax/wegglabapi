@@ -52,6 +52,8 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        $user = User::find($id);
+        return $this->responseWithItem($user);
     }
 
     /**
@@ -86,5 +88,24 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function createOrGetStripeCustomer()
+    {
+        /**
+         * @var User $user
+         */
+        $user = auth()->user();
+        $stripeCustomer = $user->createOrGetStripeCustomer();
+        return $this->responseWithItem($stripeCustomer);
+    }
+
+    public function getUserBalance(Request $request)
+    {
+        /**
+         * @var User $user
+         */
+        $user = auth()->user();
+        $balance = $user->balance();
+        return $this->responseWithItem(array('balance' => $balance));
     }
 }

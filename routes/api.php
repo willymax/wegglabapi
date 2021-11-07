@@ -7,12 +7,10 @@ use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UpdateUserPassword;
 use App\Http\Controllers\Auth\SocialLoginController;
-use App\Http\Controllers\UserController as ControllersUserController;
 use App\Mail\InvoicePaid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 use Illuminate\Support\Facades\Storage;
 
 /*
@@ -28,7 +26,6 @@ use Illuminate\Support\Facades\Storage;
 
 Route::prefix('v1')->group(function () {
     Route::post('/auth/register', [AuthController::class, 'register']);
-
     Route::middleware(['guest', 'web'])->group(function () {
         Route::prefix('auth')->group(function () {
             Route::post('/login', [AuthController::class, 'login']);
@@ -65,6 +62,8 @@ Route::prefix('v1')->group(function () {
             Route::resource('questions', QuestionController::class);
             Route::resource('subjects', SubjectController::class);
             Route::resource('users', UserController::class);
+            Route::post('createOrGetStripeCustomer', [UserController::class, 'createOrGetStripeCustomer']);
+            Route::get('getUserBalance', [UserController::class, 'getUserBalance']);
             //Route::get('/users', [App\Http\Controllers\UserController::class, 'index']);
         }
     );
