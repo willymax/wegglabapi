@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\PaypalSubscription;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -89,6 +90,7 @@ class UserController extends Controller
     {
         //
     }
+
     public function createOrGetStripeCustomer()
     {
         /**
@@ -107,5 +109,36 @@ class UserController extends Controller
         $user = auth()->user();
         $balance = $user->balance();
         return $this->responseWithItem(array('balance' => $balance));
+    }
+
+    /**
+     * Creates an intent for payment so we can capture the payment
+     * method for the user.
+     *
+     * @param Request $request The request data from the user.
+     */
+    public function getSetupIntent(Request $request)
+    {
+        return $this->responseWithItem($request->user()->createSetupIntent());;
+    }
+
+    public function subscribeUser(Request $request)
+    {
+        $this->validate($request, [
+            'subscription_id' => 'required',
+            // 'status' => 'required',
+            // 'start_time' => 'required',
+        ]);
+
+        /**
+         * @var User $user
+         */
+        $user = auth()->user();
+        $paypalSubscription = PaypalSubscription::updateOrCreate(
+            ['user_id' => $user->id],
+            ['subscription_id' => $request->subscription_id, 'status' => 'ACTIVE', 'start_time' => '']
+        );
+        $user = User::find($user->id);
+        return $this->responseWithItem($user);
     }
 }

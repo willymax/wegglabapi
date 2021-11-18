@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Cashier\Billable;
+use function Illuminate\Events\queueable;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,8 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+    protected $with = ['payPalSubscription'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -74,6 +77,11 @@ class User extends Authenticatable
         return false;
     }
 
+    public function payPalSubscription()
+    {
+        return $this->hasOne(PaypalSubscription::class);
+    }
+
     public function is_admin()
     {
         $role = $this->role;
@@ -81,5 +89,16 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::updated(queueable(function ($customer) {
+            $customer->syncStripeCustomerDetails();
+        }));
     }
 }

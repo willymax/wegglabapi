@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Artisan;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/home', function () {
+    return view('welcome');
+})->name('home');
 
 Route::get('password/reset/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 
