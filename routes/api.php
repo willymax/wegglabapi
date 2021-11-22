@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UpdateUserPassword;
 use App\Http\Controllers\Auth\SocialLoginController;
+use App\Http\Controllers\PaypalSubscriptionController;
 use App\Mail\InvoicePaid;
+use App\Models\PaypalSubscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -69,6 +71,7 @@ Route::prefix('v1')->group(function () {
             Route::prefix('subscriptions')->group(
                 function () {
                     Route::post('/subscribeUser', [UserController::class, 'subscribeUser']);
+                    Route::resource('paypalSubscriptions', PaypalSubscriptionController::class);
                 }
             );
             Route::resource('answers', AnswerController::class);
@@ -76,6 +79,8 @@ Route::prefix('v1')->group(function () {
             Route::resource('subjects', SubjectController::class);
             Route::resource('users', UserController::class);
             Route::get('createOrGetStripeCustomer', [UserController::class, 'createOrGetStripeCustomer']);
+            Route::post('updateAvatar', [UserController::class, 'updateAvatar']);
+            Route::post('changePassword', [UserController::class, 'changePassword']);
             Route::get('getUserBalance', [UserController::class, 'getUserBalance']);
             //Route::get('/users', [App\Http\Controllers\UserController::class, 'index']);
         }

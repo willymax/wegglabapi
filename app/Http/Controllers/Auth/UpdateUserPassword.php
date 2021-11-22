@@ -31,7 +31,20 @@ class UpdateUserPassword extends Controller
             if (!isset($input['current_password']) || !Hash::check($input['current_password'], $user->password)) {
                 $validator->errors()->add('current_password', __('The provided password does not match your current password.'));
             }
-        })->validateWithBag('updatePassword');
+        });
+        if ($validator->fails()) {
+            $err = array();
+            $errors = $validator->errors();
+            foreach ($errors->get('current_password') as $message) {
+                //
+                array_push($err, (object) array('source' => 'current_password', 'detail' => $message));
+            }
+            foreach ($errors->get('password') as $message) {
+                //
+                array_push($err, (object) array('source' => 'password', 'detail' => $message));
+            }
+            return $this->respondValidationError($err);
+        }
 
         // if ($validator->fails()) {
         //     if (!isset($input['current_password']) || !Hash::check($input['current_password'], $user->password)) {
@@ -44,6 +57,9 @@ class UpdateUserPassword extends Controller
             'password' => Hash::make($input['password']),
         ])->save();
 
-        return $this->respondWithMessage('Password reset');
+        $user =
+            auth()->user();
+
+        return response()->json($user, 201);
     }
 }
