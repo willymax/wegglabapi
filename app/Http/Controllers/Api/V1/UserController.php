@@ -201,6 +201,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'subscription_id' => 'required',
+            'paypal_plan_id' => 'required',
             // 'status' => 'required',
             // 'start_time' => 'required',
         ]);
@@ -211,7 +212,7 @@ class UserController extends Controller
         $user = auth()->user();
         $paypalSubscription = PaypalSubscription::updateOrCreate(
             ['user_id' => $user->id],
-            ['subscription_id' => $request->subscription_id, 'status' => 'ACTIVE', 'start_time' => '']
+            ['subscription_id' => $request->subscription_id, 'paypal_plan_id' => $request->paypal_plan_id, 'status' => 'ACTIVE', 'start_time' => '']
         );
         $user = User::find($user->id);
         return $this->responseWithItem($user);

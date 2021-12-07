@@ -16,6 +16,7 @@ class PaypalSubscription extends Model
     protected $fillable = [
         'user_id',
         'subscription_id',
+        'paypal_plan_id',
         'status',
         'start_time',
     ];
@@ -23,5 +24,10 @@ class PaypalSubscription extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function plan()
+    {
+        return $this->hasOne(PaypalPlan::class, 'planId', 'paypal_plan_id');
     }
 }

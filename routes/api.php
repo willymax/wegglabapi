@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UpdateUserPassword;
 use App\Http\Controllers\Auth\SocialLoginController;
+use App\Http\Controllers\PaypalPlanController;
 use App\Http\Controllers\PaypalSubscriptionController;
 use App\Mail\InvoicePaid;
 use App\Models\PaypalSubscription;
@@ -74,6 +75,7 @@ Route::prefix('v1')->group(function () {
                     Route::resource('paypalSubscriptions', PaypalSubscriptionController::class);
                 }
             );
+            Route::resource('plans', PaypalPlanController::class);
             Route::resource('answers', AnswerController::class);
             Route::resource('questions', QuestionController::class);
             Route::resource('subjects', SubjectController::class);
