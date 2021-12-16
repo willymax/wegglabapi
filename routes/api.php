@@ -71,7 +71,7 @@ Route::prefix('v1')->group(function () {
             );
             Route::prefix('subscriptions')->group(
                 function () {
-                    Route::post('/subscribeUser', [UserController::class, 'subscribeUser']);
+                    Route::post('/subscribeUser', [PaypalSubscriptionController::class, 'subscribeUser']);
                     Route::resource('paypalSubscriptions', PaypalSubscriptionController::class);
                 }
             );
